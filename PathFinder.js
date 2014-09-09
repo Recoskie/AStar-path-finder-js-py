@@ -18,9 +18,10 @@ var map=
 
 function DisplayPath(list)
 {var output="";
-for(var i=0;i<list.length;i++)
+try{for(var i=0;i<list.length;i++)
 {x=list[i][1];y=list[i][0];
-output+="x="+x+",y="+y+"\r\n";}
+output+="x="+x+",y="+y+"\r\n";}}
+catch(e){return("no possible path");}
 return(output);}
 
 //*****************************display all paths in separated in lists*************************
@@ -146,7 +147,8 @@ newpaths=new Array();
 
 //************************************display the different paths************************************
 
-WScript.echo("new paths after exstend"+DisplayPaths(original)+"");} //end of main loop
+//WScript.echo("new paths after exstend"+DisplayPaths(original)+"");
+} //end of main loop
 
 //***************************return null all paths gone though no way to goal*************************
 
