@@ -18,6 +18,24 @@ var map=
 [1,1,1,0,1,0,1,1,1,1]
 ];
 
+/*
+may use this code to test on larger maps you may create loops to add walls
+
+var map=new Array(401);
+
+for(var i1=0;i1<map.length;i1++)
+{
+map[i1]=new Array(401);
+
+for(var i2=0;i2<map.length;i2++)
+{
+map[i1][i2]=0;
+}
+
+WScript.echo("Map Made"); use this as to know when path finder starts and map iteration is complete
+
+}*/
+
 //***********************************display one single path list*************************************
 
 function DisplayPath(list){var output="";
@@ -46,7 +64,9 @@ var output=new Array();
 
 //***********************************check if no wall move down one***********************************
 
-if(y1<map.length-1){if(map[y1+1][x1]==0)
+if(y1<map.length-1)
+{
+if(map[y1+1][x1]==0)
 {
 //**********************check if the point has been previusly visited by another**********************
 
@@ -136,6 +156,26 @@ var CurrentYDif=0,CurrentXDif=0;
 var OldXDif=x2-paths[0][paths[0].length-1][1];
 var OldYDif=y2-paths[0][paths[0].length-1][0];
 
+//********************check end if an shortest path is already beaing processed***********************
+
+if(paths[0].length<paths[paths.length-1].length)
+{
+//**************scan last four posibilitys that might had been added during algoritam*****************
+
+for(var i=Math.max(paths.length-5,0);i<paths.length;i++)
+{
+CurrentYDif=y2-paths[i][paths[i].length-1][0];
+CurrentXDif=x2-paths[i][paths[i].length-1][1];
+
+if((CurrentYDif<OldYDif)&(CurrentXDif<OldXDif))
+{PathElement=i;
+OldXDif=CurrentXDif;
+OldYDif=CurrentYDif;}}
+}
+
+else
+{
+
 for(var i=1;i<paths.length;i++)
 {
 CurrentYDif=y2-paths[i][paths[i].length-1][0];
@@ -145,6 +185,8 @@ if((CurrentYDif<OldYDif)&(CurrentXDif<OldXDif))
 {PathElement=i;
 OldXDif=CurrentXDif;
 OldYDif=CurrentYDif;}}
+
+}
 
 //************now put the cloests path as the first path to scan in path finding algoritham***********
 
@@ -200,7 +242,7 @@ paths=ClosestPathFirst(x2,y2,paths);
 
 //*************************************display the different paths************************************
 
-WScript.echo("new paths after exstend"+DisplayPaths(paths)+"");
+WScript.echo("new paths after exstend"+DisplayPaths(paths)+""); //blank this line out when doing large searches
 
 } //***************************************end of main loop*******************************************
 
@@ -212,4 +254,6 @@ return(null);}
 
 var path=FindPath(1,1,8,8);
 
-WScript.echo("result\r\n"+DisplayPath(path)+"");
+WScript.echo("result\r\n"+DisplayPath(path)+""); //blank this line out if you want to test the speed of the path finder
+
+//WScript.echo("finnished"); use this instead of iteration and printing values which takes large amount of time
