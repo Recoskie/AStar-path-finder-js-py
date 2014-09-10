@@ -18,24 +18,6 @@ var map=
 [1,1,1,0,1,0,1,1,1,1]
 ];
 
-/*
-may use this code to test on larger maps you may create loops to add walls
-
-var map=new Array(401);
-
-for(var i1=0;i1<map.length;i1++)
-{
-map[i1]=new Array(401);
-
-for(var i2=0;i2<map.length;i2++)
-{
-map[i1][i2]=0;
-}
-
-WScript.echo("Map Made"); use this as to know when path finder starts and map iteration is complete
-
-}*/
-
 //***********************************display one single path list*************************************
 
 function DisplayPath(list){var output="";
@@ -137,7 +119,7 @@ return(output);
 
 function NotVisited(vp,cmp)
 {
-for(var i=0;i<vp.length;i++)
+for(var i=vp.length-1;i>0;i--)
 {
 if(vp[i][1]==cmp[1]&vp[i][0]==cmp[0])
 {return(false);}
@@ -242,7 +224,7 @@ paths=ClosestPathFirst(x2,y2,paths);
 
 //*************************************display the different paths************************************
 
-WScript.echo("new paths after exstend"+DisplayPaths(paths)+""); //blank this line out when doing large searches
+//WScript.echo("new paths after exstend"+DisplayPaths(paths)+"");
 
 } //***************************************end of main loop*******************************************
 
@@ -254,6 +236,4 @@ return(null);}
 
 var path=FindPath(1,1,8,8);
 
-WScript.echo("result\r\n"+DisplayPath(path)+""); //blank this line out if you want to test the speed of the path finder
-
-//WScript.echo("finnished"); use this instead of iteration and printing values which takes large amount of time
+WScript.echo("result\r\n"+DisplayPath(path)+"");
