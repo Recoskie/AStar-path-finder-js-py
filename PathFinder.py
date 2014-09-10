@@ -1,4 +1,5 @@
 import copy
+import math
 
 map=[
     [1,1,1,1,1,1,1,1,1,1],
@@ -12,6 +13,31 @@ map=[
     [1,0,0,0,0,0,1,1,0,1],
     [1,1,1,0,1,0,1,1,1,1]
     ]
+
+#map=[
+#    [0,0,0,0,0,0,0,0,0,0],
+#    [0,0,0,0,0,0,0,0,0,0],
+#    [0,0,0,0,0,0,0,0,0,0],
+#    [0,0,0,0,0,0,0,0,0,0],
+#    [0,0,0,0,0,0,0,0,0,0],
+#    [0,0,0,0,0,0,0,0,0,0],
+#    [0,0,0,0,0,0,0,0,0,0],
+#    [0,0,0,0,0,0,0,0,0,0],
+#    [0,0,0,0,0,0,0,0,0,0],
+#    [0,0,0,0,0,0,0,0,0,0]
+#    ]
+
+#iterate large map
+
+#map=[]
+
+#for i1 in range(0,400):
+#    map2=[]
+#    for i2 in range(0,400):
+#        map2.append(0)
+#    map.append(map2)
+
+#map[397][397]=1
 
 #***************************print the found path************************************
 
@@ -34,22 +60,20 @@ def PrintPaths(PathList):
 
 #*******************************visited squares**************************************
 
-VisitedList=[[]]
+VisitedList=[]
 
-#Improves performace Estmite Closest Path rearange the path list********************
+#Improves performance Estimate Closest Path rearrange the path list********************
 #to scan the shortest path first****************************************************
 
 def EstimateBestPath(x2, y2, paths ):
     PathElement=0
     
-    CurrentYDif=0
-    CurrentXDif=0
+    CurrentDif=0
     
     Clength=0
     Olength=0
 
-    OldXDif=0
-    OldYDif=0
+    OldDif=0
 
     Olength=len(paths[0])
     
@@ -59,22 +83,22 @@ def EstimateBestPath(x2, y2, paths ):
         Clength=len(paths[i])
         if(Clength>Olength):
             PathElement=i
-            OldXDif=x2-paths[i][len(paths[i])-1][0]
-            OldYDif=y2-paths[i][len(paths[i])-1][1]
+            OldDif=math.sqrt((math.pow((x2-paths[i][len(paths[i])-1][0]),2)+math.pow((y2-paths[i][len(paths[i])-1][1]),2)))
             Olength=Clength
 
-    #best path scan
-    for i in range(0,len(paths)):
-        CurrentXDif=x2-paths[i][len(paths[i])-1][0]
-        CurrentYDif=y2-paths[i][len(paths[i])-1][1]
+    #best path scan only if longest path progression is not last path
 
-        if(CurrentYDif<=OldYDif and CurrentXDif<=OldXDif and len(paths[i])==Olength ):
-            PathElement=i
-            OldXDif=CurrentXDif
-            OldYDif=CurrentYDif
+    if(not len(paths)-1==PathElement):
+        for i in range(0,len(paths)):
+            CurrentDif=math.sqrt((math.pow((x2-paths[i][len(paths[i])-1][0]),2)+math.pow((y2-paths[i][len(paths[i])-1][1]),2)))
 
-    #flip the best path to first element to scan by algoritham
-    print "best path change 1 with "+str(PathElement+1)
+            if(CurrentDif<OldDif and len(paths[i])==Olength ):
+                PathElement=i
+                OldDif=CurrentDif
+
+    #flip the best path to first element to scan by algorithm
+    #print "best path change 1 with "+str(PathElement+1)
+
     if(not PathElement==0):
         c=copy.copy(paths[0])
         paths[0]=paths[PathElement]
@@ -178,8 +202,6 @@ def PathFinder(x1, y1, x2, y2 ):
             return(PathList[0])
         
         m=GetMoves(x, y )
-
-        #print str(m)
         
         for i in m:
             c=copy.copy(PathList[0])
@@ -189,29 +211,29 @@ def PathFinder(x1, y1, x2, y2 ):
         
         PathList.pop(0)
 
-        #leave these two lines in for making sure path finder works
-
-        #print "*********************************************************************"
-        #PrintPaths(PathList)
-
-        #end if the two lines
-
         #stop if no more paths
         
         if not PathList:
             IsPaths=False
+        else:
+            #rearange paths for performance
 
-        #rearange paths for performance
-        PathList=EstimateBestPath(x2, y2, PathList )
+            PathList=EstimateBestPath(x2, y2, PathList )
 
-    #if no path to destnaion send back start point
+            #leave these two lines in for makeing shure path finder works
+
+            print "*********************************************************************"
+            PrintPaths(PathList)
+
+            #end of the two lines
+
+    #if no path to destination send back start point
     return([[x1,y1]])
 
 #test the path finder
 
-Path=PathFinder(1,2,8,8)
+Path=PathFinder(1,1,8,8)
 
 #print the path if path found if path is not found just the start point will print
 
 PrintPath(Path )
- 
