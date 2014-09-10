@@ -7,11 +7,11 @@ var map=
 [1,0,1,1,0,1,0,0,0,1],
 [1,0,0,0,0,1,0,0,0,1],
 [1,1,1,0,1,1,0,0,0,1],
-[1,0,1,0,1,0,0,1,0,1],
-[1,0,0,0,0,0,0,0,0,1],
+[0,0,1,0,1,0,0,1,0,1],
+[0,0,0,0,0,0,0,0,0,1],
 [1,0,1,0,1,1,1,1,0,1],
 [1,0,0,0,0,0,1,1,0,1],
-[1,1,1,1,1,1,1,1,1,1]
+[1,1,1,0,1,0,1,1,1,1]
 ]
 
 //***************************************display one single path list**************************************
@@ -35,21 +35,29 @@ for(var i2=0;i2<list[i].length;i2++)
 output+="x="+x+",y="+y+",";}}
 return(output);}
 
-//************************************check for non progressing paths**********************************
+//****************************************check visited pionts****************************************
 
-function CheckLoopBack(points)
-{var cmpX=0,cmpY=0;
-for(var pointC1=points.length-1;pointC1>0;pointC1--)
-{cmpX=points[pointC1][1];cmpY=points[pointC1][0];
-for(var pointC2=points.length-1;pointC2>0;pointC2--)
-{if((cmpX==points[pointC2][1]&cmpY==points[pointC2][0])&pointC2!=pointC1)
-{return(true);}}};return(false);
+function NotVisited(vp,cmp)
+{
+for(var i=0;i<vp.length;i++)
+{
+if(vp[i][1]==cmp[1]&vp[i][0]==cmp[0])
+{
+return(false);
+}
+}
+return(true);
 }
 
 //*************************************run path finding algoritham************************************
 
 function FindPath(x1,y1,x2,y2)
 {
+
+//**************************store all points traveled an an fast to read list*************************
+
+var PointsVisited=new Array();
+
 //******************************************new and old paths*****************************************
 
 var original=new Array();
@@ -77,45 +85,57 @@ if(x1==x2&y1==y2){return(original[0]);} //*******if point to goal is found retur
 
 //***********************************check if no wall move down one***********************************
 
-if(y1<map.length){if(map[y1+1][x1]==0)
+if(y1<map.length-1){if(map[y1+1][x1]==0)
 {
-//***************************************add this to an new path**************************************
+//**********************check if the point has been previusly visited by another**********************
 
+if(NotVisited(PointsVisited,[y1+1,x1]))
+{
+
+//*****************************add this to an new path and as visited point***************************
+
+PointsVisited[PointsVisited.length]=[y1+1,x1];
 newpaths[newpaths.length]=original[0].concat([[y1+1,x1]]);
 
-//******************************************************************************************************
-//if it loops back to an older point in the path delete this move in new copied path from originals path
-//******************************************************************************************************
+}
 
-if(CheckLoopBack(newpaths[newpaths.length-1])){newpaths.splice(newpaths.length-1,1);}}}
+}}
 
 //**********************************check if no wall move up one**************************************
 
 if(y1!=0){if(map[y1-1][x1]==0)
 {
-//*************************************add this to an new path****************************************
+//**********************check if the point has been previusly visited by another**********************
 
+if(NotVisited(PointsVisited,[y1-1,x1]))
+{
+
+//*****************************add this to an new path and as visited point***************************
+
+PointsVisited[PointsVisited.length]=[y1-1,x1];
 newpaths[newpaths.length]=original[0].concat([[y1-1,x1]]);
 
-//******************************************************************************************************
-//if it loops back to an older point in the path delete this move in new copied path from originals path
-//******************************************************************************************************
+}
 
-if(CheckLoopBack(newpaths[newpaths.length-1])){newpaths.splice(newpaths.length-1,1);}}}
+}}
 
 //*********************************check if no wall move across one***********************************
 
 if(x1<map[y1].length){if(map[y1][x1+1]==0)
 {
-//**************************************add this to an new path***************************************
+//**********************check if the point has been previusly visited by another**********************
 
+if(NotVisited(PointsVisited,[y1,x1+1]))
+{
+
+//*****************************add this to an new path and as visited point***************************
+
+PointsVisited[PointsVisited.length]=[y1,x1+1];
 newpaths[newpaths.length]=original[0].concat([[y1,x1+1]]);
 
-//******************************************************************************************************
-//if it loops back to an older point in the path delete this move in new copied path from originals path
-//******************************************************************************************************
+}
 
-if(CheckLoopBack(newpaths[newpaths.length-1])){newpaths.splice(newpaths.length-1,1);}}}
+}}
 
 //***********************************check if no wall move back one***********************************
 
@@ -123,32 +143,35 @@ if(x1!=0)
 {
 if(map[y1][x1-1]==0)
 {
-//**************************************add this to an new path***************************************
+//**********************check if the point has been previusly visited by another**********************
 
+if(NotVisited(PointsVisited,[y1,x1-1]))
+{
+
+//*****************************add this to an new path and as visited point***************************
+
+PointsVisited[PointsVisited.length]=[y1,x1-1];
 newpaths[newpaths.length]=original[0].concat([[y1,x1-1]]);
 
-//******************************************************************************************************
-//if it loops back to an older point in the path delete this move in new copied path from originals path
-//******************************************************************************************************
+}
 
-if(CheckLoopBack(newpaths[newpaths.length-1])){newpaths.splice(newpaths.length-1,1);}}}
+}}
 
 //****************************************remove extended path****************************************
 
-original.splice(0,1);} //end of while loop
+original.splice(0,1);} //******************************end of while loop******************************
 
 //*****************************************************************************************************
 //copy the new paths to the original paths and reset the new paths then start expanding the paths again
 //*****************************************************************************************************
 
-original=new Array();
-original=original.concat(newpaths);
-newpaths=new Array();
+original=new Array();original=original.concat(newpaths);newpaths=new Array();
 
-//************************************display the different paths************************************
+//*************************************display the different paths************************************
 
-//WScript.echo("new paths after exstend"+DisplayPaths(original)+"");
-} //end of main loop
+WScript.echo("new paths after exstend"+DisplayPaths(original)+"");
+
+} //***************************************end of main loop*******************************************
 
 //***************************return null all paths gone though no way to goal*************************
 
