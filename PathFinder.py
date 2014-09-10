@@ -13,19 +13,6 @@ map=[
     [1,1,1,0,1,0,1,1,1,1]
     ]
 
-#map=[
-#    [0,0,0,0,0,0,0,0,0,0],
-#    [0,0,0,0,0,0,0,0,0,0],
-#    [0,0,0,0,0,0,0,0,0,0],
-#    [0,0,0,0,0,0,0,0,0,0],
-#    [0,0,0,0,0,0,0,0,0,0],
-#    [0,0,0,0,0,0,0,0,0,0],
-#    [0,0,0,0,0,0,0,0,0,0],
-#    [0,0,0,0,0,0,0,0,0,0],
-#    [0,0,0,0,0,0,0,0,0,0],
-#    [0,0,0,0,0,0,0,0,0,0]
-#    ]
-
 #***************************print the found path************************************
 
 def PrintPath(PathPoints):
@@ -45,7 +32,7 @@ def PrintPaths(PathList):
             print "x="+str(i2[0])+",y="+str(i2[1])
         
 
-#*******************************visited sqares**************************************
+#*******************************visited squares**************************************
 
 VisitedList=[[]]
 
@@ -66,7 +53,7 @@ def EstimateBestPath(x2, y2, paths ):
 
     Olength=len(paths[0])
     
-    #find longest progressed path keep moving to drection of goal
+    #find longest progressed path keep moving to direction of goal
 
     for i in range(0,len(paths)):
         Clength=len(paths[i])
@@ -111,7 +98,7 @@ def NotVisited(x1, y1 ):
     return(True)
 
 #********************************get each move**************************************
-#****************this must be rewiten for the colision engine***********************
+#****************this must be rewritten for the collision engine***********************
 
 def GetMoves(x1, y1 ):
     
@@ -164,11 +151,11 @@ def GetMoves(x1, y1 ):
                 #add to Move List
                 MoveList.append([x1+1, y1 ])
 
-    #return the moves that can be made from curent path
+    #return the moves that can be made from current path
 
     return(MoveList)
 
-#*************************path finding algoritham start*****************************
+#*************************path finding algorithm start*****************************
 
 def PathFinder(x1, y1, x2, y2 ):
 
@@ -202,7 +189,7 @@ def PathFinder(x1, y1, x2, y2 ):
         
         PathList.pop(0)
 
-        #leave these two lines in for makeing shure path finder works
+        #leave these two lines in for making sure path finder works
 
         #print "*********************************************************************"
         #PrintPaths(PathList)
@@ -227,3 +214,4 @@ Path=PathFinder(1,2,8,8)
 #print the path if path found if path is not found just the start point will print
 
 PrintPath(Path )
+ 
