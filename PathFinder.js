@@ -16,7 +16,7 @@ var map=
 [1,0,1,0,1,1,1,1,0,1],
 [1,0,0,0,0,0,1,1,0,1],
 [1,1,1,0,1,0,1,1,1,1]
-]
+];
 
 //***********************************display one single path list*************************************
 
@@ -125,6 +125,35 @@ if(vp[i][1]==cmp[1]&vp[i][0]==cmp[0])
 return(true);
 }
 
+//****************************************estimate closest path***************************************
+
+function ClosestPathFirst(x2,y2,paths)
+{
+var PathElement=0;
+
+var CurrentYDif=0,CurrentXDif=0;
+
+var OldXDif=x2-paths[0][paths[0].length-1][1];
+var OldYDif=y2-paths[0][paths[0].length-1][0];
+
+for(var i=1;i<paths.length;i++)
+{
+CurrentYDif=y2-paths[i][paths[i].length-1][0];
+CurrentXDif=x2-paths[i][paths[i].length-1][1];
+
+if((CurrentYDif<OldYDif)&(CurrentXDif<OldXDif))
+{PathElement=i;
+OldXDif=CurrentXDif;
+OldYDif=CurrentYDif;}}
+
+//************now put the cloests path as the first path to scan in path finding algoritham***********
+
+var copy=paths[0].slice();
+paths[0]=paths[PathElement];
+paths[PathElement]=copy;
+
+return(paths);}
+
 //*************************************run path finding algoritham************************************
 
 function FindPath(x1,y1,x2,y2)
@@ -156,14 +185,18 @@ if(x1==x2&y1==y2){PointsVisited=new Array();return(paths[0]);}
 
 Moves=GetMoves(x1,y1);
 
+//******************************load each new move as diffrent paths**********************************
+
 for(var i=0;i<Moves.length;i++)
-{
-paths[paths.length]=paths[0].concat([Moves[i]]);
-}
+{paths[paths.length]=paths[0].concat([Moves[i]]);}
 
 //************************************remove the exstended path***************************************
 
 paths.splice(0,1);
+
+//********************sort path list and put first path to be used as closest path********************
+
+paths=ClosestPathFirst(x2,y2,paths);
 
 //*************************************display the different paths************************************
 
