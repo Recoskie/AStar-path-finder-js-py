@@ -14,31 +14,6 @@ map=[
     [1,1,1,0,1,0,1,1,1,1]
     ]
 
-#map=[
-#    [0,0,0,0,0,0,0,0,0,0],
-#    [0,0,0,0,0,0,0,0,0,0],
-#    [0,0,0,0,0,0,0,0,0,0],
-#    [0,0,0,0,0,0,0,0,0,0],
-#    [0,0,0,0,0,0,0,0,0,0],
-#    [0,0,0,0,0,0,0,0,0,0],
-#    [0,0,0,0,0,0,0,0,0,0],
-#    [0,0,0,0,0,0,0,0,0,0],
-#    [0,0,0,0,0,0,0,0,0,0],
-#    [0,0,0,0,0,0,0,0,0,0]
-#    ]
-
-#iterate large map
-
-#map=[]
-
-#for i1 in range(0,400):
-#    map2=[]
-#    for i2 in range(0,400):
-#        map2.append(0)
-#    map.append(map2)
-
-#map[397][397]=1
-
 #***************************print the found path************************************
 
 def PrintPath(PathPoints):
@@ -56,58 +31,35 @@ def PrintPaths(PathList):
         print "path="+str(int1)
         for i2 in i:
             print "x="+str(i2[0])+",y="+str(i2[1])
-        
 
 #*******************************visited squares**************************************
 
 VisitedList=[]
 
-#Improves performance Estimate Closest Path rearrange the path list********************
-#to scan the shortest path first****************************************************
+#***Improves performance find closest Path to destination rearrange the path list****
+#************************to scan the shortest path first*****************************
+#****************************uses pythagoras theorem*********************************
 
-def EstimateBestPath(x2, y2, paths ):
+def getClosestPath(x2, y2, paths ):
     PathElement=0
-    
     CurrentDif=0
-    
-    Clength=0
-    Olength=0
-
     OldDif=0
 
-    Olength=len(paths[0])
-    
-    #find longest progressed path keep moving to direction of goal
+    PathElement=0
+    OldDif=math.sqrt((math.pow((x2-paths[0][len(paths[0])-1][0]),2)+math.pow((y2-paths[0][len(paths[0])-1][1]),2)))
 
-    for i in range(0,len(paths)):
-        Clength=len(paths[i])
-        if(Clength>Olength):
-            PathElement=i
-            OldDif=math.sqrt((math.pow((x2-paths[i][len(paths[i])-1][0]),2)+math.pow((y2-paths[i][len(paths[i])-1][1]),2)))
-            Olength=Clength
+    for i in range(1,len(paths)):
+        CurrentDif=math.sqrt((math.pow((x2-paths[i][len(paths[i])-1][0]),2)+math.pow((y2-paths[i][len(paths[i])-1][1]),2)))
 
-    #best path scan only if longest path progression is not last path
-
-    if(not len(paths)-1==PathElement):
-        for i in range(0,len(paths)):
-            CurrentDif=math.sqrt((math.pow((x2-paths[i][len(paths[i])-1][0]),2)+math.pow((y2-paths[i][len(paths[i])-1][1]),2)))
-
-            if(CurrentDif<OldDif and len(paths[i])==Olength ):
+        if(CurrentDif<OldDif):
                 PathElement=i
                 OldDif=CurrentDif
-
-    #flip the best path to first element to scan by algorithm
-    #print "best path change 1 with "+str(PathElement+1)
 
     if(not PathElement==0):
         c=copy.copy(paths[0])
         paths[0]=paths[PathElement]
         paths[PathElement]=c
 
-    #print "**************************paths changed to**************************"
-    #PrintPaths(paths)
-
-    #return path rearangement
     return(paths )
 
 #********************check if Point has not been Visited****************************
@@ -122,7 +74,6 @@ def NotVisited(x1, y1 ):
     return(True)
 
 #********************************get each move**************************************
-#****************this must be rewritten for the collision engine***********************
 
 def GetMoves(x1, y1 ):
     
@@ -218,7 +169,7 @@ def PathFinder(x1, y1, x2, y2 ):
         else:
             #rearange paths for performance
 
-            PathList=EstimateBestPath(x2, y2, PathList )
+            PathList=getClosestPath(x2, y2, PathList )
 
             #leave these two lines in for makeing shure path finder works
 
