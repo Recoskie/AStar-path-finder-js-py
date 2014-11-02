@@ -236,4 +236,4 @@ return(null);}
 
 var path=FindPath(1,1,8,8);
 
-WScript.echo("result\r\n"+DisplayPath(path)+"");
+alert("result\r\n"+DisplayPath(path)+"");
